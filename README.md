@@ -26,7 +26,7 @@ The typical usage of this library to output to datadog
 from pylogs import DatadogHttpHandler
 
 logger = DatadogHttpHandler(api_key='<DATADOG_API_KEY>', service='test', host='your_hostname',
-                            logger_name='example', tags={'env': 'test', 'user': 'Tim the Enchanter'})
+                            logger_name='example', tags={'env': 'test', 'user': 'Tim the Enchanter'}).logger
 logger.info('Hello World')
 ```
 
