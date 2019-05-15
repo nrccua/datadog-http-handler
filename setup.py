@@ -7,6 +7,6 @@ setup(name='datadog-http-handler',
       author='Tim Reichard',
       author_email='tim.reichard@nrccua.org',
       license='MIT',
-      packages=['datadog-http-handler'],
+      packages=['datadog_http_handler'],
       install_requires=['requests'],
       zip_safe=False)
