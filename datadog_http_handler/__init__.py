@@ -43,9 +43,8 @@ class DataDogHandler(StreamHandler):
         self.url = f"https://http-intake.logs.datadoghq.com/v1/input/{api_key}"
 
     def emit(self, record):
-
         date = datetime.utcfromtimestamp(record.created).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-        payload = {'message': record.msg, 'level': record.levelname}
+        payload = {'message': self.format(record), 'level': record.levelname}
         payload['ddtags'] = self.tags + f",datetime:{date}" if self.tags else f"datetime:{date}"
         if self.service:
             payload['service'] = self.service
