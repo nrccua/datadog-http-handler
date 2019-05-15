@@ -18,11 +18,11 @@ def define_logger(logger_name, msg_fmt, level):
 class DatadogHttpHandler:
 
     def __init__(self, api_key, service, host='', source='', tags={},
-                 logger_name=None, msg_fmt=None, level=None):
+                 logger_name=None, msg_fmt=None, level=None, raise_exception=False):
 
         self.logger, msg_fmt, level = define_logger(logger_name, msg_fmt, level)
         tags = ','.join([f"{k}:{v}" for k, v in tags.items()])
-        handler = DataDogHandler(api_key, service, host, tags, source)
+        handler = DataDogHandler(api_key, raise_exception, service, host, tags, source)
         handler.setLevel(level)
         self.logger.setLevel(level)
         self.logger.addHandler(handler)
@@ -31,13 +31,14 @@ class DatadogHttpHandler:
 class DataDogHandler(StreamHandler):
     '''Send log messages to Datadog via http requests.'''
 
-    def __init__(self, api_key, service='', host='', tags='', source=''):
+    def __init__(self, api_key, raise_exception, service='', host='', tags='', source=''):
         StreamHandler.__init__(self)
         self.api_key = api_key
         self.service = service
         self.host = host
         self.source = source
         self.tags = tags
+        self.raise_exception = raise_exception
         self.headers = {'Content-Type': 'application/json'}
         self.url = f"https://http-intake.logs.datadoghq.com/v1/input/{api_key}"
 
@@ -55,7 +56,8 @@ class DataDogHandler(StreamHandler):
 
         try:
             response = requests.post(self.url, json=payload, headers=self.headers)
-            if response.status_code != 200:
-                print("Failed sending logs to Datadog")
+            if response.status_code != 200 and self.raise_exception:
+                raise Exception('Failed sending logs to Datadog')
         except requests.exceptions.RequestException as err:
-            print(err)
+            if self.raise_exception:
+                raise Exception(err)

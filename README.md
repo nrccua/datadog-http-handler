@@ -23,11 +23,41 @@ pip install git+https://github.com/nrccua/datadog-http-handler.git
 The typical usage of this library to output to datadog
 
 ```bash
-from pylogs import DatadogHttpHandler
+from datadog_http_handler import DatadogHttpHandler
 
-logger = DatadogHttpHandler(api_key='<DATADOG_API_KEY>', service='test', host='your_hostname',
-                            logger_name='example', tags={'env': 'test', 'user': 'Tim the Enchanter'}).logger
+logger = DatadogHttpHandler(
+    api_key=os.getenv('DATADOG_API_KEY', ''),
+    service='test',
+    host='your_hostname',
+    logger_name='example',
+    tags={'env': 'test', 'user': 'Tim the Enchanter'}
+).logger
+
 logger.info('Hello World')
+```
+
+Since sending logs to datadog via http can issue in a request failure for a myriad of reasons, it would be
+good to know if the failure accord.  By setting raise_failure=True when creating the DatadogHttpHandler
+object, an exception will now be thrown if the status code of the response is not 200.  See below:
+
+```bash
+import traceback
+
+from datadog_http_handler import DatadogHttpHandler
+
+logger = DatadogHttpHandler(
+    api_key='bad_key',
+    raise_exception=True,
+    service='test',
+    host='your_hostname',
+    logger_name='example',
+    tags={'env': 'test', 'user': 'Tim the Enchanter'}
+).logger
+
+try:
+    logger.info('Hello World')
+exceptException as e:
+    print(traceback.format_exc())
 ```
 
 ## AUTHORS
