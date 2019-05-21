@@ -1,7 +1,7 @@
 # datadog-http-handler
 
 Python logging module allowing you to log directly to Datadog via https.
-urrently support only for python 3.6+.
+Currently support only for python 3.6+.
 
 ## Installation
 

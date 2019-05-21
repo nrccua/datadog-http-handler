@@ -1,3 +1,6 @@
+'''Python logging module allowing you to log directly to Datadog via https.'''
+
+# pylint: disable=too-many-arguments
 
 from datetime import datetime
 import logging
@@ -5,42 +8,51 @@ from logging import StreamHandler
 
 import requests
 
-def define_logger(logger_name, msg_fmt, level):
-    '''Setup logger with msg formatting and logging level.'''
-
-    if msg_fmt is None:
-        msg_fmt = '%(asctime)s.%(msecs)03d %(levelname)s - %(message)s'
-    if level is None:
-        level = logging.INFO
-
-    return logging.getLogger(logger_name), msg_fmt, level
 
 class DatadogHttpHandler:
+    '''Logging Handler class for sending logs to Datadog'''
 
-    def __init__(self, api_key, service, host='', source='', tags={},
-                 logger_name=None, msg_fmt=None, level=None, raise_exception=False):
+    def __init__(self, api_key, service, host='', source='', tags=None,
+                 logger_name='', level=None, raise_exception=False):
 
-        self.logger, msg_fmt, level = define_logger(logger_name, msg_fmt, level)
-        tags = ','.join([f"{k}:{v}" for k, v in tags.items()])
-        handler = DataDogHandler(api_key, raise_exception, service, host, tags, source)
-        handler.setLevel(level)
+        self.api_key = api_key
+        self.host = host
+        self.source = source
+        self.service = service
+        self.tags = '' if tags is None else ','.join([f"{k}:{v}" for k, v in tags.items()])
+        self.raise_exception = raise_exception
+        self.setup_logger(logger_name, level)
+
+    def setup_logger(self, logger_name, level):
+        '''Create the DataDogHandler and assign to the logger.'''
+
+        if level is None:
+            level = logging.INFO
+
+        self.logger = logging.getLogger(logger_name)
         self.logger.setLevel(level)
-        self.logger.addHandler(handler)
+        self.logger.addHandler(self.setup_handler(level))
+
+    def setup_handler(self, level):
+        '''Send log messages to Datadog via http requests.'''
+
+        handler = DataDogHandler(self)
+        handler.setLevel(level)
+        return handler
 
 
 class DataDogHandler(StreamHandler):
     '''Send log messages to Datadog via http requests.'''
 
-    def __init__(self, api_key, raise_exception, service='', host='', tags='', source=''):
+    def __init__(self, params):
         StreamHandler.__init__(self)
-        self.api_key = api_key
-        self.service = service
-        self.host = host
-        self.source = source
-        self.tags = tags
-        self.raise_exception = raise_exception
+        self.service = params.service
+        self.host = params.host
+        self.source = params.source
+        self.tags = params.tags
+        self.raise_exception = params.raise_exception
         self.headers = {'Content-Type': 'application/json'}
-        self.url = f"https://http-intake.logs.datadoghq.com/v1/input/{api_key}"
+        self.url = f"https://http-intake.logs.datadoghq.com/v1/input/{params.api_key}"
 
     def emit(self, record):
         date = datetime.utcfromtimestamp(record.created).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]

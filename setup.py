@@ -1,3 +1,5 @@
+'''Python logging module allowing you to log directly to Datadog via https.'''
+
 from setuptools import setup
 
 setup(name='datadog-http-handler',
