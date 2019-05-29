@@ -46,7 +46,7 @@ import traceback
 from datadog_http_handler import DatadogHttpHandler
 
 logger = DatadogHttpHandler(
-    api_key='bad_key',
+    api_key='your_key',
     raise_exception=True,
     service='test',
     host='your_hostname',
@@ -69,3 +69,4 @@ See also the list of [contributors](https://github.com/nrccua/pylogs/contributor
 ## ACKNOWLEDGEMENTS
 
 * **Bryan Cusatis** - NRCCUA Architecture Team Lead
+* **Grant Evans** - NRCCUA DevOps Engineering Lead
