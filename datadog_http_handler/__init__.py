@@ -36,7 +36,8 @@ class DatadogHttpHandler:
     def setup_handler(self, level):
         '''Send log messages to Datadog via http requests.'''
 
-        handler = DataDogHandler(self)
+        handler = DataDogHandler(self.api_key, self.service, self.host, self.source,
+            tags=self.tags, raise_exception=self.raise_exception)
         handler.setLevel(level)
         return handler
 
@@ -44,15 +45,20 @@ class DatadogHttpHandler:
 class DataDogHandler(StreamHandler):
     '''Send log messages to Datadog via http requests.'''
 
-    def __init__(self, params):
+    def __init__(self, api_key, service, host, source, tags=None, raise_exception=False):
         StreamHandler.__init__(self)
-        self.service = params.service
-        self.host = params.host
-        self.source = params.source
-        self.tags = params.tags
-        self.raise_exception = params.raise_exception
+        self.service = service
+        self.host = host
+        self.source = source
+        if tags is None:
+            self.tags = ''
+        elif tags is dict: 
+            self.tags = ','.join([f"{k}:{v}" for k, v in tags.items()])
+        else:
+            self.tags = tags
+        self.raise_exception = raise_exception
         self.headers = {'Content-Type': 'application/json'}
-        self.url = f"https://http-intake.logs.datadoghq.com/v1/input/{params.api_key}"
+        self.url = f"https://http-intake.logs.datadoghq.com/v1/input/{api_key}"
 
     def emit(self, record):
         date = datetime.utcfromtimestamp(record.created).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]

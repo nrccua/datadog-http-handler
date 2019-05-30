@@ -11,4 +11,6 @@ setup(name='datadog-http-handler',
       license='MIT',
       packages=['datadog_http_handler'],
       install_requires=['requests'],
+      setup_requires=['pytest-runner'],
+      tests_require=['pytest'],
       zip_safe=False)
