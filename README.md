@@ -60,6 +60,10 @@ exceptException as e:
     print(traceback.format_exc())
 ```
 
+## LICENSE
+
+[MIT](https://github.com/nrccua/datadog-http-handler/blob/master/LICENSE)
+
 ## AUTHORS
 
 * **Tim Reichard**
