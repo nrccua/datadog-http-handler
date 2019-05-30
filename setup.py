@@ -2,8 +2,10 @@
 
 from setuptools import setup
 
-with open("README.md", "r") as handle:
-    long_description = handle.read()
+from m2r import convert
+
+with open('README.md', 'r') as handle:         
+      long_description = convert(handle.read())
 
 setup(name='datadog-http-handler',
       version='1.0.1',
