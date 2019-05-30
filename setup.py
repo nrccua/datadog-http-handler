@@ -1,14 +1,16 @@
 '''Python logging module allowing you to log directly to Datadog via https.'''
 
+import sys
 from setuptools import setup
 
 from m2r import convert
 
-with open('README.md', 'r') as handle:         
-      long_description = convert(handle.read())
+if sys.argv[-1] == 'sdist':
+      with open('README.md', 'r') as handle:         
+            long_description = convert(handle.read())
 
 setup(name='datadog-http-handler',
-      version='1.0.2',
+      version='1.0.3',
       description='Python logging module allowing you to log directly to Datadog via https',
       long_description=long_description,
       url='https://github.com/nrccua/datadog-http-handler',
