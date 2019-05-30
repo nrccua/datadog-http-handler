@@ -68,7 +68,7 @@ exceptException as e:
 
 * **Tim Reichard**
 
-See also the list of [contributors](https://github.com/nrccua/pylogs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/nrccua/datadog-http-handler/contributors) who participated in this project.
 
 ## ACKNOWLEDGEMENTS
 
