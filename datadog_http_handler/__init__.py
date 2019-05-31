@@ -52,10 +52,10 @@ class DataDogHandler(StreamHandler):
         self.source = source
         if tags is None:
             self.tags = ''
-        elif tags is dict: 
-            self.tags = ','.join([f"{k}:{v}" for k, v in tags.items()])
-        else:
+        elif isinstance(tags, str):
             self.tags = tags
+        else:
+            self.tags = ','.join([f"{k}:{v}" for k, v in tags.items()])
         self.raise_exception = raise_exception
         self.headers = {'Content-Type': 'application/json'}
         self.url = f"https://http-intake.logs.datadoghq.com/v1/input/{api_key}"
