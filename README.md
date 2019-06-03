@@ -5,7 +5,7 @@ Currently support only for python 3.6+.
 
 ## Installation
 
-Install [python 3.7.2+](https://www.python.org/downloads/)
+Install [python](https://www.python.org/downloads/)
 
 Install [pip](https://pip.pypa.io/en/stable/installing/)
 ```bash
@@ -15,7 +15,7 @@ python get-pip.py
 
 Install datadog-http-handler
 ```bash
-pip install git+https://github.com/nrccua/datadog-http-handler.git
+pip install datadog-http-handler
 ```
 
 ## Usage
@@ -46,7 +46,7 @@ import traceback
 from datadog_http_handler import DatadogHttpHandler
 
 logger = DatadogHttpHandler(
-    api_key='your_key',
+    api_key=os.getenv('DATADOG_API_KEY', ''),
     raise_exception=True,
     service='test',
     host='your_hostname',
@@ -66,11 +66,12 @@ exceptException as e:
 
 ## AUTHORS
 
-* **Tim Reichard**
+* **NRCCUA Software Engineers**
 
 See also the list of [contributors](https://github.com/nrccua/datadog-http-handler/contributors) who participated in this project.
 
 ## ACKNOWLEDGEMENTS
 
 * **Bryan Cusatis** - NRCCUA Architecture Team Lead
+* **Tim Reichard** - NRCCUA Architecture Team Member
 * **Grant Evans** - NRCCUA DevOps Engineering Lead
