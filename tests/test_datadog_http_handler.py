@@ -8,7 +8,7 @@ import pytest
 
 from datadog_http_handler import DatadogHttpHandler
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def datadog_logger():
     '''Make sure you have set the environment variable
     DATADOG_API_KEY (export DATADOG_API_KEY=<your_key>).'''
@@ -22,7 +22,7 @@ def datadog_logger():
         tags={'env': 'test', 'user': 'Tim the Enchanter'}
     ).logger
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def bad_datadog_logger():
     '''Give a fake api_key to DatadogHttpHandler.'''
 
