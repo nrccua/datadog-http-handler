@@ -11,7 +11,7 @@ else:
       long_description = ''
 
 setup(name='datadog-http-handler',
-      version='1.0.6',
+      version='1.0.7',
       description='Python logging module allowing you to log directly to Datadog via https',
       long_description=long_description,
       url='https://github.com/nrccua/datadog-http-handler',
